@@ -5,8 +5,7 @@
             [lein-essthree.schemas
              :refer [RepoConfig]]
             [schema.core :as s])
-  (:import com.amazonaws.auth.profile.ProfileCredentialsProvider
-           com.amazonaws.regions.Regions))
+  (:import com.amazonaws.auth.profile.ProfileCredentialsProvider))
 
 (defn aws-credentials []
   (let [creds (.getCredentials (ProfileCredentialsProvider.))]
@@ -49,12 +48,12 @@
                           :snapshots snapshots}
                          (select-keys config lein-keys))
         aws-creds (:aws-creds config)
-        username  (or (:access-key-id aws-creds)
-                      :env/aws_access_key_id
-                      (:access-key-id (aws-credentials)))
-        password  (or (:secret-access-key aws-creds)
-                      :env/aws_secret_access_key
-                      (:secret-key (aws-credentials)))]
+        username  (or (:access-key-id (aws-credentials))
+                      (:access-key-id aws-creds)
+                      :env/aws_access_key_id)
+        password  (or (:secret-key (aws-credentials))
+                      (:secret-access-key aws-creds)
+                      :env/aws_secret_access_key)]
     [(str "essthree-" build-category)
      (merge repo-data
             {:username username
@@ -68,5 +67,4 @@
                    (build-repo config "snapshots"))
         (update-in [:repositories] conj
                    (build-repo config "releases")))
-
     project))
