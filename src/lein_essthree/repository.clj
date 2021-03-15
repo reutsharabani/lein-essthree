@@ -4,7 +4,14 @@
   (:require [cuerdas.core :as c]
             [lein-essthree.schemas
              :refer [RepoConfig]]
-            [schema.core :as s]))
+            [schema.core :as s])
+  (:import com.amazonaws.auth.profile.ProfileCredentialsProvider
+           com.amazonaws.regions.Regions))
+
+(defn aws-credentials []
+  (let [creds (.getCredentials (ProfileCredentialsProvider.))]
+    {:access-key-id (.getAWSAccessKeyId creds)
+     :secret-key (.getAWSSecretKey creds)}))
 
 
 (s/defn ^:private get-config :- (s/maybe RepoConfig)
@@ -43,9 +50,11 @@
                          (select-keys config lein-keys))
         aws-creds (:aws-creds config)
         username  (or (:access-key-id aws-creds)
-                      :env/aws_access_key_id)
+                      :env/aws_access_key_id
+                      (:access-key-id (aws-credentials)))
         password  (or (:secret-access-key aws-creds)
-                      :env/aws_secret_access_key)]
+                      :env/aws_secret_access_key
+                      (:secret-key (aws-credentials)))]
     [(str "essthree-" build-category)
      (merge repo-data
             {:username username
