@@ -5,10 +5,10 @@
             [lein-essthree.schemas
              :refer [RepoConfig]]
             [schema.core :as s])
-  (:import com.amazonaws.auth.profile.ProfileCredentialsProvider))
+  (:import com.amazonaws.auth.DefaultAWSCredentialsProviderChain))
 
 (defn aws-credentials []
-  (let [creds (.getCredentials (ProfileCredentialsProvider.))]
+  (let [creds (.getCredentials (DefaultAWSCredentialsProviderChain.))]
     {:access-key-id (.getAWSAccessKeyId creds)
      :secret-key (.getAWSSecretKey creds)}))
 
