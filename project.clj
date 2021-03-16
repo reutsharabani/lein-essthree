@@ -1,4 +1,4 @@
-(defproject reutsharabani/lein-essthree "0.0.1"
+(defproject reutsharabani/lein-essthree "0.0.2"
   :description "Leiningen plugin for easy S3 project deployment and dependency resolution"
   :url "http://github.com/reutsharabani/lein-essthree"
   :license {:name "MIT License"
