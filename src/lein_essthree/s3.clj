@@ -5,6 +5,7 @@
             [clojure.java.io :as io]
             [lein-essthree.schemas
              :refer [AWSCreds]]
+            [lein-essthree.utils :refer [aws-credentials]]
             [me.raynes.fs :as fs]
             [pathetic.core :as path]
             [schema.core :as s]))

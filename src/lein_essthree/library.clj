@@ -5,6 +5,7 @@
             [leiningen.deploy :as ld]
             [lein-essthree.schemas
              :refer [LibraryDeployConfig]]
+            [lein-essthree.utils :refer [aws-credentials]]
             [leiningen.pom :as pom]
             [schema.core :as s]))
 
@@ -44,9 +45,12 @@
         lein-keys [:shapshots :sign-releases :checksum :update]
         repo-data (merge {:url url} (select-keys config lein-keys))
         aws-creds (:aws-creds config)
-        username  (or (:access-key-id aws-creds)
+
+        username  (or (:access-key-id (aws-credentials))
+                      (:access-key-id aws-creds)
                       :env/aws_access_key_id)
-        password  (or (:secret-access-key aws-creds)
+        password  (or (:secret-key (aws-credentials))
+                      (:secret-access-key aws-creds)
                       :env/aws_secret_access_key)]
     ["essthree" (merge repo-data
                        {:username username
